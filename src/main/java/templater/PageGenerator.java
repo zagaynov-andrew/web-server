@@ -3,7 +3,6 @@ package templater;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.Version;
 
 import java.io.File;
 import java.io.IOException;
