@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>My Site</title>
+    <link rel="stylesheet" href="css/input-wrapper.css">
+    <link rel="stylesheet" href="css/button.css">
+    <script src="js/ajax.js"></script>
+    <script src="js/signup-button.js"></script>
+</head>
+<body>
+
+<fieldset class="container" style="border: 0 none; width: 325px;">
+    <form action="" method="POST">
+        <div class="input-wrapper">
+            <input type="text" id="signup-login" placeholder="login" name="login" value=""/>
+        </div>
+        <div class="input-wrapper">
+            <input type="text" id="signup-email" placeholder="e-mail" name="email" value=""/>
+        </div>
+        <div class="input-wrapper">
+            <input type="password" id="signup-password" placeholder="password" name="password" value=""/>
+        </div>
+        <div class="button">
+            <input type="submit" id="signup-button" value="Sign up">
+        </div>
+        <input type="text" id="signup-errors" class="signup-errors" readonly>
+    </form>
+</fieldset>
+
+</body>
+</html>
