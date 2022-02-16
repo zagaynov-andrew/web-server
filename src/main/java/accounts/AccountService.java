@@ -1,5 +1,12 @@
 package accounts;
 
+import dbService.DBException;
+import dbService.DBService;
+import dbService.dao.UsersDAO;
+import dbService.dataSets.UsersDataSet;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,23 +14,43 @@ import java.util.Map;
  * A class for storing account information.
  */
 public class AccountService {
-    private final Map<String, UserProfile> loginToProfile;
-    private final Map<String, UserProfile> sessionIdToProfile;
+    DBService dbService;
+    private final Map<String, UsersDataSet> sessionIdToProfile;
 
     /**
      * Constructor.
      */
-    public AccountService() {
-        loginToProfile = new HashMap<>();
+    public AccountService(DBService dbService) {
+        this.dbService = dbService;
         sessionIdToProfile = new HashMap<>();
     }
 
     /**
      * Adds a new user.
-     * @param userProfile User profile that is being added.
+     * @param usersDataSet User profile that is being added.
      */
-    public void addNewUser(UserProfile userProfile) {
-        loginToProfile.put(userProfile.getLogin(), userProfile);
+    public void addNewUser(UsersDataSet usersDataSet) throws SQLException {
+
+        Connection connection = dbService.getConnection();
+
+        try {
+            connection.setAutoCommit(false);
+            UsersDAO dao = new UsersDAO(connection);
+            dao.createTable();
+            dao.insertUser(usersDataSet);
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ignore) {
+            }
+            throw new SQLException(e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ignore) {
+            }
+        }
     }
 
     /**
@@ -31,8 +58,18 @@ public class AccountService {
      * @param login user login
      * @return user profile by login
      */
-    public UserProfile getUserByLogin(String login) {
-        return loginToProfile.get(login);
+    public UsersDataSet getUserByLogin(String login) throws SQLException {
+
+        Connection connection = dbService.getConnection();
+
+        try {
+            connection.setAutoCommit(false);
+            UsersDAO dao = new UsersDAO(connection);
+            dao.createTable();
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        }
+        return (new UsersDAO(dbService.getConnection()).getByLogin(login));
     }
 
     /**
@@ -40,17 +77,17 @@ public class AccountService {
      * @param sessionId user session ID
      * @return user profile by session ID
      */
-    public UserProfile getUserBySessionId(String sessionId) {
+    public UsersDataSet getUserBySessionId(String sessionId) {
         return sessionIdToProfile.get(sessionId);
     }
 
     /**
      * Adds a new session.
      * @param sessionId new session ID
-     * @param userProfile profile of the user who owns the session
+     * @param usersDataSet profile of the user who owns the session
      */
-    public void addSession(String sessionId, UserProfile userProfile) {
-        sessionIdToProfile.put(sessionId, userProfile);
+    public void addSession(String sessionId, UsersDataSet usersDataSet) {
+        sessionIdToProfile.put(sessionId, usersDataSet);
     }
 
     /**

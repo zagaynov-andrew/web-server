@@ -2,6 +2,9 @@ package main;
 
 import accounts.AccountService;
 import accounts.UserProfile;
+import dbService.DBException;
+import dbService.DBService;
+import dbService.dataSets.UsersDataSet;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -17,10 +20,13 @@ public  class Main
 {
     public static void main(String[] args) throws Exception {
 
-        AccountService accountService = new AccountService();
+        DBService dbService = new DBService();
+        dbService.printConnectInfo();
 
-        accountService.addNewUser(new UserProfile("admin"));
-        accountService.addNewUser(new UserProfile("test"));
+        AccountService accountService = new AccountService(dbService);
+
+//        accountService.addNewUser(new UsersDataSet("admin", "admin@mysite.com", "admin"));
+//        accountService.addNewUser(new UsersDataSet("test",  "test@mysite.com",  "test"));
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new SignInServlet(accountService)), "/signin");

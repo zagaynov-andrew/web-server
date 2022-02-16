@@ -3,10 +3,13 @@ package servlets;
 import accounts.AccountService;
 import accounts.UserProfile;
 import com.google.gson.Gson;
+import dbService.DBException;
+import dbService.dataSets.UsersDataSet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 
 /**
@@ -36,20 +39,43 @@ public class SignUpServlet extends HttpServlet {
         String password = request.getParameter("password");
         String email = request.getParameter("email");
 
-        if (login == null || password == null || email == null) {
+//        System.out.println("login=" + login);
+//        System.out.println("password=" + password);
+//        System.out.println("email=" + email);
+
+        if (login == null || password == null) {
             response.setContentType("text/html;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
-        if (accountService.getUserByLogin(login) != null) {
+        UsersDataSet usersDataSet = null;
+        try {
+            usersDataSet = accountService.getUserByLogin(login);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (usersDataSet != null) {
             response.setContentType("text/html;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_CONFLICT);
             return;
         }
 
         UserProfile profile = new UserProfile(login, password, email);
-        accountService.addNewUser(profile);
+        try {
+            accountService.addNewUser(new UsersDataSet(login, email, password));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.setContentType("text/html;charset=utf-8");
+            try {
+                response.getWriter().println(e.getMessage());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
 
         Gson gson = new Gson();
         String json = gson.toJson(profile);
