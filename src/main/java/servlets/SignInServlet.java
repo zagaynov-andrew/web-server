@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import templater.PageGenerator;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -98,7 +99,8 @@ public class SignInServlet extends HttpServlet {
         accountService.addSession(request.getSession().getId(), usersDataSet);
         response.setContentType("text/html;charset=utf-8");
         try {
-            response.getWriter().println("Authorized: " + login);
+            response.getWriter().println(PageGenerator.instance().getPage("chat.html", null));
+//            response.getWriter().println("Authorized: " + login);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
