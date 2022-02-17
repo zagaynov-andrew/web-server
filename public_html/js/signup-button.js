@@ -29,7 +29,7 @@ function signupResponseListener () {
     else if (this.readyState === 4 && this.status === 409) {
         document.querySelector('#signup-errors').value = "Such a user is already registered.";
     }
-    else {
+    else if (this.readyState === 4) {
         document.querySelector('#signup-errors').value = "Registration error.";
     }
 }
