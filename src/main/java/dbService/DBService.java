@@ -1,7 +1,6 @@
 package dbService;
 
 import dbService.dao.UsersDAO;
-import dbService.dataSets.UsersDataSet;
 import org.h2.jdbcx.JdbcDataSource;
 
 import java.sql.Connection;

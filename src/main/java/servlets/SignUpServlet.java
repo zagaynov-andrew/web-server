@@ -1,9 +1,6 @@
 package servlets;
 
 import accounts.AccountService;
-import accounts.UserProfile;
-import com.google.gson.Gson;
-import dbService.DBException;
 import dbService.dataSets.UsersDataSet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,8 +70,6 @@ public class SignUpServlet extends HttpServlet {
             return;
         }
 
-//        Gson gson = new Gson();
-//        String json = gson.toJson(profile);
         response.setContentType("text/html;charset=utf-8");
         accountService.addSession(request.getSession().getId(), userProfile);
         try {

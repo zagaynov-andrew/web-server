@@ -12,16 +12,9 @@ import org.eclipse.jetty.websocket.server.JettyWebSocketServletFactory;
 import templater.PageGenerator;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @WebServlet(name = "WebSocketChatServlet", urlPatterns = {"/chat"})

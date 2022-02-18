@@ -9,7 +9,6 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.websocket.server.config.JettyWebSocketServletContainerInitializer;
-import servlets.RootServlet;
 import servlets.SignInServlet;
 import servlets.SignUpServlet;
 import servlets.WebSocketChatServlet;
@@ -25,12 +24,8 @@ public  class Main
 
         AccountService accountService = new AccountService(dbService);
 
-//        accountService.addNewUser(new UsersDataSet("admin", "admin@mysite.com", "admin"));
-//        accountService.addNewUser(new UsersDataSet("test",  "test@mysite.com",  "test"));
-
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         JettyWebSocketServletContainerInitializer.configure(context, null);
-        context.addServlet(new ServletHolder(new RootServlet()),                        "*.");
         context.addServlet(new ServletHolder(new SignInServlet(accountService)),        "/signin");
         context.addServlet(new ServletHolder(new SignUpServlet(accountService)),        "/signup");
         context.addServlet(new ServletHolder(new WebSocketChatServlet(accountService)), "/chat");

@@ -1,14 +1,10 @@
 package servlets;
 
 import accounts.AccountService;
-import com.google.gson.Gson;
-import dbService.DBException;
 import dbService.dataSets.UsersDataSet;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import templater.PageGenerator;
 
 import java.io.IOException;
 import java.sql.SQLException;

@@ -1,6 +1,5 @@
 package dbService.dao;
 
-import dbService.DBException;
 import dbService.dataSets.UsersDataSet;
 import dbService.executor.Executor;
 
