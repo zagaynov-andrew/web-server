@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>My Site</title>
+    <script src="js/ajax.js"></script>
+    <script src="js/chat.js"></script>
+
+</head>
+
+<body onload="init();">
+
+    <label id="login">${login}</label>
+
+    <a id="signout-link" data-confirm="Are you sure?" href="/signin">Sign out</a>
+
+
+    <fieldset class="container" style="border: 0 none; width: 325px;">
+        <div id="chatbox">
+            <textarea id="messages" rows="20" cols="50" readonly="readonly"></textarea>
+        </div>
+            <input id="message" type="text"/>
+    <!--    <button id="submitmsg" onclick="sendMessage()">Submit</button>-->
+        <input type="button" id="submitmsg" value="Send..." onclick="sendMessage();"/>
+    </fieldset>
+
+</body>
+</html>

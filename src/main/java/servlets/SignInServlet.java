@@ -41,17 +41,22 @@ public class SignInServlet extends HttpServlet {
         String sessionId = request.getSession().getId();
         UsersDataSet usersDataSet = accountService.getUserBySessionId(sessionId);
 
+        response.setContentType("text/html;charset=utf-8");
+        // if the user is logged in
         if (usersDataSet == null) {
-            response.setContentType("text/html;charset=utf-8");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        } else {
-            Gson gson = new Gson();
-            String json = gson.toJson(usersDataSet);
-            response.setContentType("text/html;charset=utf-8");
             try {
-                response.getWriter().println(json);
+                response.sendRedirect("/sign-in.html");
             } catch (IOException ex) {
                 ex.printStackTrace();
+            }
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        } else {
+            try {
+                response.getWriter().println(usersDataSet.getLogin());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return;
             }
             response.setStatus(HttpServletResponse.SC_OK);
         }
@@ -65,18 +70,15 @@ public class SignInServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) {
+
         String login = request.getParameter("login");
         String pass = request.getParameter("password");
-
-//        System.out.println("login=" + login);
-//        System.out.println("password=" + pass);
 
         if (login == null || pass == null) {
             response.setContentType("text/html;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-
 
         UsersDataSet usersDataSet = null;
         try {
@@ -98,8 +100,10 @@ public class SignInServlet extends HttpServlet {
 
         accountService.addSession(request.getSession().getId(), usersDataSet);
         response.setContentType("text/html;charset=utf-8");
+
         try {
-            response.getWriter().println(PageGenerator.instance().getPage("chat.html", null));
+            response.sendRedirect("/chat");
+//            response.getWriter().println(PageGenerator.instance().getPage("chat.html", null));
 //            response.getWriter().println("Authorized: " + login);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -115,22 +119,22 @@ public class SignInServlet extends HttpServlet {
     public void doDelete(HttpServletRequest request,
                          HttpServletResponse response) {
 
-//        String sessionId = request.getSession().getId();
-//        UserProfile profile = accountService.getUserBySessionId(sessionId);
-//
-//        if (profile == null) {
-//            response.setContentType("text/html;charset=utf-8");
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//        } else {
-//            accountService.deleteSession(sessionId);
-//            response.setContentType("text/html;charset=utf-8");
-//            try {
-//                response.getWriter().println("Goodbye!");
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//            response.setStatus(HttpServletResponse.SC_OK);
-//        }
+        String sessionId = request.getSession().getId();
+        UsersDataSet userProfile = accountService.getUserBySessionId(sessionId);
+
+        if (userProfile == null) {
+            response.setContentType("text/html;charset=utf-8");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } else {
+            accountService.deleteSession(sessionId);
+            response.setContentType("text/html;charset=utf-8");
+            try {
+                response.sendRedirect("index.html");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
 
     }
 }

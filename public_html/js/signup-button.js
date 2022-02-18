@@ -24,7 +24,7 @@ function signupResponseListener () {
     console.log(this.responseText);
     if (this.readyState === 4 && this.status === 200) {
         document.querySelector('#signup-errors').value = "";
-        alert("Successful registration!\n" + this.responseText);
+        document.location.href = document.location.protocol + '//' + document.location.host + '/chat';
     }
     else if (this.readyState === 4 && this.status === 409) {
         document.querySelector('#signup-errors').value = "Such a user is already registered.";

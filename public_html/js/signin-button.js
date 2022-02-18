@@ -23,9 +23,10 @@ function signinResponseListener () {
     console.log(this.responseText);
     if (this.readyState === 4 && this.status === 200) {
         document.querySelector('#signin-errors').value = "";
-        alert("Successful authorization!\n" + this.responseText);
+        document.location.href = document.location.protocol + '//' + document.location.host + '/chat';
+//        alert("Successful authorization!\n" + this.responseText);
     }
-    else {
+    else if (this.readyState === 4) {
         document.querySelector('#signin-errors').value = "Invalid password or login.";
     }
 }

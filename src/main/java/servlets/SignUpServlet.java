@@ -39,10 +39,6 @@ public class SignUpServlet extends HttpServlet {
         String password = request.getParameter("password");
         String email = request.getParameter("email");
 
-//        System.out.println("login=" + login);
-//        System.out.println("password=" + password);
-//        System.out.println("email=" + email);
-
         if (login == null || password == null) {
             response.setContentType("text/html;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -62,9 +58,9 @@ public class SignUpServlet extends HttpServlet {
             return;
         }
 
-        UserProfile profile = new UserProfile(login, password, email);
+        UsersDataSet userProfile = new UsersDataSet(login, email, password);
         try {
-            accountService.addNewUser(new UsersDataSet(login, email, password));
+            accountService.addNewUser(userProfile);
         } catch (SQLException e) {
             e.printStackTrace();
             response.setContentType("text/html;charset=utf-8");
@@ -77,13 +73,16 @@ public class SignUpServlet extends HttpServlet {
             return;
         }
 
-        Gson gson = new Gson();
-        String json = gson.toJson(profile);
+//        Gson gson = new Gson();
+//        String json = gson.toJson(profile);
         response.setContentType("text/html;charset=utf-8");
+        accountService.addSession(request.getSession().getId(), userProfile);
         try {
-            response.getWriter().println(json);
+            response.sendRedirect("/sign-in.html");
         } catch (IOException ex) {
             ex.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
         }
         response.setStatus(HttpServletResponse.SC_OK);
     }
